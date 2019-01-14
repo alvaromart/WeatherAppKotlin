@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.alvaromart.weatherapp.R
 import com.alvaromart.weatherapp.adapters.ForecastListAdapter
+import org.jetbrains.anko.find
 
 private val items = listOf(
         "Mon 6/23 - Sunny - 31/17",
@@ -23,7 +24,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val forecastList = findViewById<RecyclerView>(R.id.forecast_list)
+        //val forecastList = findViewById<RecyclerView>(R.id.forecast_list)
+        val forecastList : RecyclerView = find(R.id.forecast_list)
         forecastList.layoutManager = LinearLayoutManager(this)
         forecastList.adapter = ForecastListAdapter(items)
     }
