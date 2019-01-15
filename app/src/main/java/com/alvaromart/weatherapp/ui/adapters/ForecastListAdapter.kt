@@ -18,8 +18,7 @@ import org.jetbrains.anko.find
  */
 
 public class ForecastListAdapter(private val weekForecast: ForecastList, private val itemClick:
-        ForecastListAdapter.OnItemClickListener):
-        RecyclerView.Adapter<ForecastListAdapter.ViewHolder>() {
+    (Forecast) -> Unit): RecyclerView.Adapter<ForecastListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
@@ -34,7 +33,7 @@ public class ForecastListAdapter(private val weekForecast: ForecastList, private
 
     override fun getItemCount(): Int = weekForecast.size
 
-    class ViewHolder(view: View, private val itemClick: OnItemClickListener)
+    class ViewHolder(view: View, private val itemClick: (Forecast) -> Unit)
         : RecyclerView.ViewHolder(view) {
 
         private val iconView = view.find<ImageView>(R.id.icon)
@@ -48,8 +47,8 @@ public class ForecastListAdapter(private val weekForecast: ForecastList, private
                 Picasso.with(itemView.ctx).load(iconUrl).into(iconView)
                 dateView.text = date
                 descriptionView.text = description
-                maxTemperatureView.text = "$high"
-                minTemperatureView.text = "$low"
+                maxTemperatureView.text = "${high}º"
+                minTemperatureView.text = "${low}º"
                 itemView.setOnClickListener { itemClick(this) }
             }
         }
