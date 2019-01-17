@@ -1,7 +1,7 @@
 package com.alvaromart.weatherapp.ui
 
 import android.app.Application
-import com.alvaromart.weatherapp.ui.utils.DelegatesExt
+import com.alvaromart.weatherapp.extensions.DelegatesExt
 
 /**
  * Created by alvaro on 15/1/19.

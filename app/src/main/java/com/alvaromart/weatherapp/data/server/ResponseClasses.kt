@@ -1,4 +1,4 @@
-package com.alvaromart.weatherapp.data
+package com.alvaromart.weatherapp.data.server
 
 /**
  * Created by alvaro on 14/1/19.

@@ -1,4 +1,4 @@
-package com.alvaromart.weatherapp.ui.utils
+package com.alvaromart.weatherapp.extensions
 
 import android.content.Context
 import android.view.View
