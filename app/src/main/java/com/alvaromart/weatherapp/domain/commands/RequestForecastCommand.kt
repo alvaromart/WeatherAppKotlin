@@ -1,17 +1,19 @@
 package com.alvaromart.weatherapp.domain.commands
 
-import com.alvaromart.weatherapp.data.server.ForecastRequest
-import com.alvaromart.weatherapp.domain.mappers.ForecastDataMapper
+import com.alvaromart.weatherapp.domain.datasource.ForecastProvider
 import com.alvaromart.weatherapp.domain.model.ForecastList
 
 /**
  * Created by alvaro on 14/1/19.
  */
 
-class RequestForecastCommand(private val zipCode: Long) :
+class RequestForecastCommand(private val zipCode: Long,
+                             private val forecastProvider: ForecastProvider = ForecastProvider()) :
         Command<ForecastList> {
-    override fun execute(): ForecastList {
-        val forecastRequest = ForecastRequest(zipCode)
-        return ForecastDataMapper().convertFromDataModel(zipCode, forecastRequest.execute())
+
+    companion object {
+        const val DAYS = 7
     }
+
+    override fun execute(): ForecastList = forecastProvider.requestByZipCode(zipCode, DAYS)
 }
