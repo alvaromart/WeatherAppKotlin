@@ -2,10 +2,7 @@ package com.alvaromart.weatherapp.data.db
 
 import com.alvaromart.weatherapp.domain.datasource.ForecastDataSource
 import com.alvaromart.weatherapp.domain.model.ForecastList
-import com.alvaromart.weatherapp.extensions.clear
-import com.alvaromart.weatherapp.extensions.parseList
-import com.alvaromart.weatherapp.extensions.parseOpt
-import com.alvaromart.weatherapp.extensions.toVarargArray
+import com.alvaromart.weatherapp.extensions.*
 import org.jetbrains.anko.db.insert
 import org.jetbrains.anko.db.select
 
@@ -16,6 +13,11 @@ import org.jetbrains.anko.db.select
 class ForecastDb(
         private val forecastDbHelper: ForecastDbHelper = ForecastDbHelper.instance,
         private val dataMapper: DbDataMapper = DbDataMapper()) : ForecastDataSource {
+
+    override fun requestDayForecast(id: Long) = forecastDbHelper.use {
+        val forecast = select(DayForecastTable.NAME).byId(id).parseOpt { DayForecast(HashMap(it))}
+        if (forecast != null) dataMapper.convertDayToDomain(forecast) else null
+    }
 
     override fun requestForecastByZipCode(zipCode: Long, date: Long) = forecastDbHelper.use {
 
