@@ -8,6 +8,7 @@ import com.alvaromart.weatherapp.extensions.ctx
 import com.alvaromart.weatherapp.extensions.slideEnter
 import com.alvaromart.weatherapp.extensions.slideExit
 import com.alvaromart.weatherapp.ui.App
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
 /**
@@ -25,7 +26,7 @@ interface ToolbarManager {
         toolbar.inflateMenu(R.menu.menu_main)
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.action_settings -> App.instance.toast("Settings")
+                R.id.action_settings -> toolbar.ctx.startActivity<SettingsActivity>()
                 else -> App.instance.toast("Unknown option")
             }
             true
