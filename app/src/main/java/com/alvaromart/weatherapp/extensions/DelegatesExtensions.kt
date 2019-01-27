@@ -2,8 +2,6 @@ package com.alvaromart.weatherapp.extensions
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.provider.Settings.Global.getString
-import java.lang.reflect.Array.*
 import kotlin.reflect.KProperty
 
 /**
