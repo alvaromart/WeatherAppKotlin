@@ -1,7 +1,7 @@
 package com.alvaromart.weatherapp.ui.activities
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.widget.TextView
 import com.alvaromart.weatherapp.R
@@ -12,10 +12,12 @@ import com.alvaromart.weatherapp.extensions.textColor
 import com.alvaromart.weatherapp.extensions.toDateString
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_detail.*
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import org.jetbrains.anko.coroutines.experimental.asReference
+import org.jetbrains.anko.coroutines.experimental.bg
 import org.jetbrains.anko.ctx
-import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.find
-import org.jetbrains.anko.uiThread
 import java.text.DateFormat
 
 class DetailActivity : AppCompatActivity(), ToolbarManager {
@@ -35,9 +37,14 @@ class DetailActivity : AppCompatActivity(), ToolbarManager {
         toolbarTitle = intent.getStringExtra(CITY_NAME)
         enableHomeAsUp { onBackPressed() }
 
-        doAsync {
-            val result = RequestDayForecastCommand(intent.getLongExtra(ID, -1)).execute()
-            uiThread { bindForecast(result) }
+        val ref = asReference()
+        val id = intent.getLongExtra(ID, -1)
+
+        async(UI) {
+            val result = bg {
+                RequestDayForecastCommand(id).execute()
+            }
+            ref().bindForecast(result.await())
         }
     }
 

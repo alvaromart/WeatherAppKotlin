@@ -6,13 +6,15 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import com.alvaromart.weatherapp.R
 import com.alvaromart.weatherapp.domain.commands.RequestForecastCommand
+import com.alvaromart.weatherapp.domain.model.ForecastList
 import com.alvaromart.weatherapp.extensions.DelegatesExtensions
 import com.alvaromart.weatherapp.ui.adapters.ForecastListAdapter
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.doAsync
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import org.jetbrains.anko.coroutines.experimental.bg
 import org.jetbrains.anko.find
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.uiThread
 
 class MainActivity() : AppCompatActivity(), ToolbarManager {
 
@@ -32,20 +34,18 @@ class MainActivity() : AppCompatActivity(), ToolbarManager {
         loadForecast()
     }
 
-    private fun loadForecast() {
-        doAsync {
-            val result = RequestForecastCommand(zipCode).execute()
-            uiThread {
-                val adapter = ForecastListAdapter(result) {
-                    startActivity<DetailActivity>(DetailActivity.ID to it.id,
-                            DetailActivity.CITY_NAME to result.city)
-                }
-                forecastList.adapter = adapter
-                title = "${result.city} (${result.country})"
-                toolbarTitle = title.toString()
+    private fun loadForecast() = async(UI) {
+        val result = bg { RequestForecastCommand(zipCode).execute() }
+        updateUI(result.await())
+    }
 
-            }
+    private fun updateUI(weekForecast: ForecastList) {
+        val adapter = ForecastListAdapter(weekForecast) {
+            startActivity<DetailActivity>(DetailActivity.ID to it.id,
+                    DetailActivity.CITY_NAME to weekForecast.city)
         }
+        forecastList.adapter = adapter
+        toolbarTitle = "${weekForecast.city} (${weekForecast.country})"
     }
 
     override fun onResume() {
